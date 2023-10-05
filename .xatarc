@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Blocverse-hack-es1pni.us-east-1.xata.sh/db/taas-platform",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
