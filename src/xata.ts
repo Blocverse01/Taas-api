@@ -24,7 +24,10 @@ const tables = [
       },
       { name: "email", type: "email", unique: true },
     ],
-    revLinks: [{ column: "owner", table: "Project" }],
+    revLinks: [
+      { column: "owner", table: "Project" },
+      { column: "user", table: "ApiKey" },
+    ],
   },
   {
     name: "Project",
@@ -99,6 +102,15 @@ const tables = [
       { name: "project", type: "link", link: { table: "Project" } },
     ],
   },
+  {
+    name: "ApiKey",
+    columns: [
+      { name: "apiKey", type: "string", unique: true },
+      { name: "user", type: "link", link: { table: "User" } },
+      { name: "expiresAt", type: "datetime" },
+      { name: "isRevoked", type: "bool", notNull: true, defaultValue: "false" },
+    ],
+  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -119,12 +131,16 @@ export type AssetDocumentRecord = AssetDocument & XataRecord;
 export type ActivityLog = InferredTypes["ActivityLog"];
 export type ActivityLogRecord = ActivityLog & XataRecord;
 
+export type ApiKey = InferredTypes["ApiKey"];
+export type ApiKeyRecord = ApiKey & XataRecord;
+
 export type DatabaseSchema = {
   User: UserRecord;
   Project: ProjectRecord;
   TokenizedProperty: TokenizedPropertyRecord;
   AssetDocument: AssetDocumentRecord;
   ActivityLog: ActivityLogRecord;
+  ApiKey: ApiKeyRecord;
 };
 
 const DatabaseClient = buildClient();
