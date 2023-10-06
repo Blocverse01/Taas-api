@@ -8,8 +8,7 @@ import appRouter from "./routes";
 
 const app = express();
 
-// Todo: Replace with actual routes
-const corsRoutes = ["/cors-route1", "/cors-route2"];
+const corsRoutes = ["/auth/create-api-key"];
 
 // Middleware function to apply CORS to specific routes
 const corsMiddleware = (
