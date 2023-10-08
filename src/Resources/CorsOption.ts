@@ -1,9 +1,13 @@
-import { allowedOrigins, allowedOriginPatterns } from "./AllowedOrigins";
+import { allowedOrigins, allowedOriginPatterns } from "./constants/AllowedOrigins";
 import { CorsOptions } from "cors";
+import { OK } from "./constants/statusCodes";
+
+const MINUS_ONE_INDEX = -1;
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    const isAllowedOrigin = !origin || allowedOrigins.indexOf(origin) !== -1;
+    const isAllowedOrigin =
+      !origin || allowedOrigins.indexOf(origin) !== MINUS_ONE_INDEX;
     const matchesPattern =
       origin && allowedOriginPatterns.some((pattern) => pattern.test(origin));
 
@@ -14,7 +18,7 @@ const corsOptions: CorsOptions = {
     }
   },
 
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: OK,
   credentials: true,
 };
 
