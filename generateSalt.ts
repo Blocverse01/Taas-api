@@ -4,7 +4,7 @@ import readline from "readline";
 
 const BCRYPT_SALT_ROUNDS = 10;
 const ENV_FILE_PATH = ".env";
-const ENV_VARIABLE_NAME = "API_KEY_SALT=";
+const ENV_VARIABLE_NAME = "API_KEY_SALT";
 const READ_FILE_ENCODING = "utf-8";
 
 async function generateSalt() {
@@ -23,6 +23,15 @@ async function generateSalt() {
     const match = RegExp(/API_KEY_SALT=(.+)/).exec(envContent);
 
     if (!match) {
+      if (envContent.includes(`${ENV_VARIABLE_NAME}=`)) {
+        const newSalt = await generateNewSalt();
+
+        envContent = envContent.replace(`${ENV_VARIABLE_NAME}=`, `${ENV_VARIABLE_NAME}=${newSalt}`);
+
+        writeEnvFile(envContent);
+        return;
+      }
+
       writeSalt(`${envContent}\n${ENV_VARIABLE_NAME}=`);
       return;
     }
@@ -33,7 +42,7 @@ async function generateSalt() {
       // API_KEY_SALT is defined but not set, generate and write salt
       const newSalt = await generateNewSalt();
 
-      envContent = envContent.replace(/API_KEY_SALT=.*/, `${ENV_VARIABLE_NAME}=${newSalt}`);
+      envContent = envContent.replace(`${ENV_VARIABLE_NAME}=`, `${ENV_VARIABLE_NAME}=${newSalt}`);
 
       writeEnvFile(envContent);
       return;
@@ -44,7 +53,7 @@ async function generateSalt() {
         return;
       }
 
-      envContent = envContent.replace(/API_KEY_SALT=(.+)/, `${ENV_VARIABLE_NAME}=${await generateNewSalt()}`);
+      envContent = envContent.replace(existingSalt, `${await generateNewSalt()}`);
 
       writeEnvFile(envContent);
     });
