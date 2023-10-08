@@ -1,14 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config(); // load env variables as early as possible
 import cors from "cors";
-import { OK } from "./Resources/constants/statusCodes";
+import { NOT_FOUND, OK } from "./Resources/constants/statusCodes";
 import corsOptions from "./Resources/CorsOption";
-dotenv.config();
+import appRouter from "./routes";
 
 const app = express();
 
-// Todo: Replace with actual routes
-const corsRoutes = ["/cors-route1", "/cors-route2"];
+const corsRoutes = ["/auth/create-api-key"];
 
 // Middleware function to apply CORS to specific routes
 const corsMiddleware = (
@@ -36,8 +36,10 @@ app.get("/", (_, res) => {
   res.status(OK).send(`TAAS API is up 🚀`);
 });
 
+app.use(appRouter);
+
 app.all("*", (_, res) => {
-  res.status(404).json({
+  res.status(NOT_FOUND).json({
     message: "Invalid Api Endpoint",
   });
 });
