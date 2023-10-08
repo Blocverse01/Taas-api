@@ -22,7 +22,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon",
+    "dev": "npx nodemon --files",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
     "generate-salt": "npx ts-node generateSalt.ts"
