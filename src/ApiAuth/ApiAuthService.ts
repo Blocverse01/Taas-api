@@ -19,13 +19,10 @@ class ApiAuthService {
   async createUserApiKey(userId: string) {
     const existingActiveApiKey = await xata.db.ApiKey.filter({
       "user.id": userId,
-      isRevoked: false,
     }).getFirst();
 
     if (existingActiveApiKey) {
-      await existingActiveApiKey.update({
-        isRevoked: true,
-      });
+      await existingActiveApiKey.delete();
     }
 
     const newApiKey = this.generateApiKey();
@@ -39,23 +36,15 @@ class ApiAuthService {
   }
 
   async validateApiKey(apiKey: string) {
-    if (!apiKey.trim())
-      throw new HttpException(BAD_REQUEST, "API key cannot be an empty string");
+    if (!apiKey.trim()) throw new HttpException(BAD_REQUEST, "API key cannot be an empty string");
 
     const hashedApiKey = this.hashApiKey(apiKey);
 
-    const existingApiKey = await xata.db.ApiKey.filter(
-      "apiKey",
-      hashedApiKey
-    ).getFirst();
+    const existingApiKey = await xata.db.ApiKey.filter("apiKey", hashedApiKey).getFirst();
 
     if (!existingApiKey) throw new HttpException(UNAUTHORIZED, "Invalid API key");
 
-    if (existingApiKey.isRevoked)
-      throw new HttpException(UNAUTHORIZED, "API key is revoked");
-
-    if (!existingApiKey.user)
-      throw new HttpException(UNAUTHORIZED, "API key has no user relation");
+    if (!existingApiKey.user) throw new HttpException(UNAUTHORIZED, "API key has no user relation");
 
     const authorizedUser = await existingApiKey.user.read();
 

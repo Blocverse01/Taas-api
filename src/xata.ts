@@ -107,8 +107,6 @@ const tables = [
     columns: [
       { name: "apiKey", type: "string", unique: true },
       { name: "user", type: "link", link: { table: "User" } },
-      { name: "expiresAt", type: "datetime" },
-      { name: "isRevoked", type: "bool", notNull: true, defaultValue: "false" },
     ],
   },
 ] as const;
