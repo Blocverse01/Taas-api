@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config(); // load env variables as early as possible
 import cors from "cors";
-import { OK } from "./Resources/constants/statusCodes";
+import { NOT_FOUND, OK } from "./Resources/constants/statusCodes";
 import corsOptions from "./Resources/CorsOption";
 import appRouter from "./routes";
 
@@ -32,14 +32,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //routes
-app.use(appRouter);
-
 app.get("/", (_, res) => {
   res.status(OK).send(`TAAS API is up 🚀`);
 });
 
+app.use(appRouter);
+
 app.all("*", (_, res) => {
-  res.status(404).json({
+  res.status(NOT_FOUND).json({
     message: "Invalid Api Endpoint",
   });
 });
