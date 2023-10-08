@@ -5,4 +5,5 @@ export const CreateApiKeySchema = Yup.object({
     userId: Yup.string().required(),
   }),
 });
+
 export type CreateApiKeySchemaType = Yup.InferType<typeof CreateApiKeySchema>;

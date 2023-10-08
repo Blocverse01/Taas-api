@@ -10,6 +10,7 @@ const validateRequestInput = (schema: Yup.AnySchema) => {
         query: req.query,
         params: req.params,
       });
+
       return next();
     } catch (error: any) {
       return res.status(BAD_REQUEST).json({ error: error.message });

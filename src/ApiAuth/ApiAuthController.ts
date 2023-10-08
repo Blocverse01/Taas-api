@@ -4,12 +4,10 @@ import ApiAuthService from "./ApiAuthService";
 import { INTERNAL_SERVER_ERROR, OK } from "../Resources/constants/statusCodes";
 
 class ApiAuthController {
-  async createApiKey(
-    req: Request<{}, {}, CreateApiKeySchemaType["body"]>,
-    res: Response
-  ) {
+  async createApiKey(req: Request<{}, {}, CreateApiKeySchemaType["body"]>, res: Response) {
     try {
       const { userId } = req.body;
+
       const newApiKey = await ApiAuthService.createUserApiKey(userId);
 
       res.status(OK).json({ apiKey: newApiKey });

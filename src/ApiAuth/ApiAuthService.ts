@@ -3,18 +3,16 @@ import { getXataClient } from "../xata";
 import bcrypt from "bcrypt";
 import { HttpException } from "../Resources/exceptions/HttpException";
 import { BAD_REQUEST, UNAUTHORIZED } from "../Resources/constants/statusCodes";
+import { API_KEY_SALT, API_KEY_LENGTH } from "../Resources/constants/env";
 
 const xata = getXataClient();
-const API_KEY_SALT = process.env.API_KEY_SALT;
 
 class ApiAuthService {
-  private API_KEY_LENGTH = 16;
-
   private generateApiKey() {
-    return randomBytes(this.API_KEY_LENGTH).toString("base64");
+    return randomBytes(+API_KEY_LENGTH).toString("base64");
   }
+
   private hashApiKey(apiKey: string) {
-    if (!API_KEY_SALT) throw Error("Add missing env variable: API_KEY_SALT");
     return bcrypt.hashSync(apiKey, API_KEY_SALT);
   }
 
@@ -23,6 +21,7 @@ class ApiAuthService {
       "user.id": userId,
       isRevoked: false,
     }).getFirst();
+
     if (existingActiveApiKey) {
       await existingActiveApiKey.update({
         isRevoked: true,
@@ -30,6 +29,7 @@ class ApiAuthService {
     }
 
     const newApiKey = this.generateApiKey();
+
     await xata.db.ApiKey.create({
       apiKey: this.hashApiKey(newApiKey),
       user: userId,
@@ -39,18 +39,21 @@ class ApiAuthService {
   }
 
   async validateApiKey(apiKey: string) {
-    if (apiKey.trim() === "")
+    if (!apiKey.trim())
       throw new HttpException(BAD_REQUEST, "API key cannot be an empty string");
 
     const hashedApiKey = this.hashApiKey(apiKey);
+
     const existingApiKey = await xata.db.ApiKey.filter(
       "apiKey",
       hashedApiKey
     ).getFirst();
 
     if (!existingApiKey) throw new HttpException(UNAUTHORIZED, "Invalid API key");
+
     if (existingApiKey.isRevoked)
       throw new HttpException(UNAUTHORIZED, "API key is revoked");
+
     if (!existingApiKey.user)
       throw new HttpException(UNAUTHORIZED, "API key has no user relation");
 

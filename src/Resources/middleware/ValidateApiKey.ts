@@ -13,7 +13,9 @@ const validateApiKey = async (req: Request, res: Response, next: NextFunction) =
     const { authorizedUser } = await ApiAuthService.validateApiKey(
       providedApiKey as string
     );
+
     req.authorizedUser = authorizedUser;
+
     return next();
   } catch (error: any) {
     return res
