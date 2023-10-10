@@ -65,6 +65,7 @@ const tables = [
     revLinks: [
       { column: "project", table: "TokenizedProperty" },
       { column: "project", table: "ActivityLog" },
+      { column: "project", table: "ApiKey" },
     ],
   },
   {
@@ -107,6 +108,12 @@ const tables = [
     columns: [
       { name: "apiKey", type: "string", unique: true },
       { name: "user", type: "link", link: { table: "User" } },
+      {
+        name: "project",
+        type: "link",
+        link: { table: "Project" },
+        unique: true,
+      },
     ],
   },
 ] as const;

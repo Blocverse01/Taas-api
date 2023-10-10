@@ -4,6 +4,7 @@ declare namespace Express {
       id: string;
       email: string;
       walletAddress: string;
+      projectId: string;
     };
   }
 }
