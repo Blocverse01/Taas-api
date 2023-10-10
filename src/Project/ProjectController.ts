@@ -8,9 +8,9 @@ class ProjectController {
 
     async getProjectDetails(req: Request<ProjectSchemaType["params"]>, res: Response) {
         try {
-            const { projectId, userId }: any = req.params;
+            const { projectId }: any = req.params;
 
-            const record = await ProjectService.getProjectDetails(projectId, userId);
+            const record = await ProjectService.getProjectDetails(projectId);
 
             res.status(OK).json({ data: record });
         } catch (error: any) {

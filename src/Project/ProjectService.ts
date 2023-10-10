@@ -6,12 +6,12 @@ const xata = getXataClient();
 class ProjectService {
 
 
-    async getProjectDetails(projectId: string, userId: string) {
+    async getProjectDetails(projectId: string) {
 
         const record = await xata.db.Project
             .select(["assetController", "assetType", "enabledPaymentMethods.*", "web3Environment",
                 "treasuryWallet", "enabledPaymentMethods.*", "owner.walletAddress", "xata.createdAt"])
-            .filter({ "id": projectId, "owner.id": userId })
+            .filter({ "id": projectId })
             .getFirst();
 
         if (!record) throw new HttpException(NOT_FOUND, "Project Not Found");
