@@ -7,6 +7,6 @@ import { validateApiKey } from "../Resources/middleware/ValidateApiKey";
 const projectRouter = express.Router();
 
 projectRouter
-    .get("/:id", validateApiKey, validateRequestInput(getProjectDetailsSchema), ProjectController.getProjectDetails)
+    .get("/:projectId/:userId", validateApiKey, validateRequestInput(getProjectDetailsSchema), ProjectController.getProjectDetails)
 
 export default projectRouter;

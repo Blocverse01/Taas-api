@@ -2,7 +2,8 @@ import * as Yup from "yup";
 
 export const getProjectDetailsSchema = Yup.object({
     params: Yup.object({
-        id: Yup.string().required("Project ID is required"),
+        projectId: Yup.string().required("Project ID is required"),
+        userId: Yup.string().required("User ID is required"),
     }),
 });
 
