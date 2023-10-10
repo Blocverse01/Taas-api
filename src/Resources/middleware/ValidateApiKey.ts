@@ -6,7 +6,7 @@ const validateApiKey = async (req: Request, res: Response, next: NextFunction) =
   const providedApiKey = req.headers["taas-api-key"];
 
   if (!providedApiKey) {
-    return res.status(UNAUTHORIZED).json({ message: "API key is missing" });
+    return res.status(UNAUTHORIZED).json({ error: "API key is missing" });
   }
 
   try {
@@ -20,7 +20,7 @@ const validateApiKey = async (req: Request, res: Response, next: NextFunction) =
   } catch (error: any) {
     return res
       .status(error?.status ?? error?.response?.status ?? INTERNAL_SERVER_ERROR)
-      .json({ message: error.message });
+      .json({ error: error.message });
   }
 };
 

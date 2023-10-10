@@ -14,7 +14,7 @@ class ApiAuthController {
     } catch (error: any) {
       return res
         .status(error?.status ?? error?.response?.status ?? INTERNAL_SERVER_ERROR)
-        .json({ message: error.message });
+        .json({ error: error.message });
     }
   }
 }
