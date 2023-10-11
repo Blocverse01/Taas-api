@@ -5,7 +5,6 @@ import { INTERNAL_SERVER_ERROR, OK } from "../Resources/constants/statusCodes";
 
 class ProjectController {
 
-
     async getProjectDetails(req: Request<ProjectSchemaType["params"]>, res: Response) {
         try {
             const { projectId }: any = req.params;
@@ -21,5 +20,4 @@ class ProjectController {
     }
 
 }
-
 export default new ProjectController();

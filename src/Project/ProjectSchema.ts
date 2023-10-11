@@ -5,6 +5,4 @@ export const getProjectDetailsSchema = Yup.object({
         projectId: Yup.string().required("Project ID is required")
     }),
 });
-
-
 export type ProjectSchemaType = Yup.InferType<typeof getProjectDetailsSchema>;
