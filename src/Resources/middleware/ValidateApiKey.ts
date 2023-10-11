@@ -14,7 +14,7 @@ const validateApiKey = async (req: Request, res: Response, next: NextFunction) =
       providedApiKey as string
     );
 
-    req.authorizedUser = authorizedUser;
+    req.body.authorizedUser = authorizedUser;
 
     return next();
   } catch (error: any) {

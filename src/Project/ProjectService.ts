@@ -5,10 +5,10 @@ const xata = getXataClient();
 
 class ProjectService {
 
-    async getProjectDetails(projectId: string) {
+    async getProjectDetails(projectId: string, userId: string) {
 
         const record = await xata.db.Project
-            .filter({ "id": projectId })
+            .filter({ "id": projectId, "owner.id": userId })
             .select(["assetController", "assetType", "web3Environment",
                 "treasuryWallet", "enabledPaymentMethods.*", "owner.walletAddress", "xata.createdAt"])
             .getFirst();
