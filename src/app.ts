@@ -36,7 +36,7 @@ app.get("/", (_, res) => {
   res.status(OK).send(`TAAS API is up 🚀`);
 });
 
-app.use(appRouter);
+app.use('/api', appRouter);
 
 app.all("*", (_, res) => {
   res.status(NOT_FOUND).json({
