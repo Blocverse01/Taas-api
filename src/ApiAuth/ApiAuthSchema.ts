@@ -2,7 +2,8 @@ import * as Yup from "yup";
 
 export const CreateApiKeySchema = Yup.object({
   body: Yup.object({
-    userId: Yup.string().required("User ID is required"),
+    userId: Yup.string().trim().required(),
+    projectId: Yup.string().trim().required(),
   }),
 });
 

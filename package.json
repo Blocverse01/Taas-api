@@ -25,7 +25,7 @@
     "dev": "npx nodemon --files",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
-    "generate-salt": "npx ts-node generateSalt.ts"
+    "generate-salt": "npx ts-node src/generateSalt.ts"
   },
   "repository": {
     "type": "git",
