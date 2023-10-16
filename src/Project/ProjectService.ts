@@ -62,7 +62,7 @@ class ProjectService {
                 fileURI: record.fileURI,
                 label: record.label,
             })),
-            media: item.photos!.map((photo) => ({
+            media: !item.photos ? [] : item.photos.map((photo) => ({
                 type: "image",
                 fileURI: photo,
             }))
