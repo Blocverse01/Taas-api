@@ -23,7 +23,7 @@ class ProjectService {
         return record;
     }
 
-    async getProjectAssets(projectId: string, authUserId: string) {
+    async getProjectAssets(projectId: string, authUserId: string, paginate: boolean, number_of_records: number, page_number: number) {
 
         const validProject = await xata.db.Project.filter({
             id: projectId,
@@ -37,16 +37,31 @@ class ProjectService {
         if (!supportedAssetTypes.includes(projectAssetType))
             throw new HttpException(BAD_REQUEST, "Asset Type Not supported yet");
 
-        const property = await xata.db.TokenizedProperty.filter({
-            "project.id": projectId
-        }).select(["tokenAddress", "tokenPrice", "tokenTicker", "description", "location", "size", "photos", "project.assetType", {
-            "name": "<-AssetDocument.property",
-            "as": "documents",
-            "columns": ["fileType", "fileURI", "fileSize", "label"],
-        }]).getAll();
+        let property: any = [];
+        if (paginate === true) {
+            const propertyData = await xata.db.TokenizedProperty.filter({
+                "project.id": projectId
+            }).select(["tokenAddress", "tokenPrice", "tokenTicker", "description", "location", "size", "photos", "project.assetType", {
+                "name": "<-AssetDocument.property",
+                "as": "documents",
+                "columns": ["fileType", "fileURI", "fileSize", "label"],
+            }]).getPaginated({
+                pagination: { size: number_of_records, offset: page_number }
+            });
 
-        // Map and transform the data
-        const transformedData: any = property.map(item => ({
+            property = propertyData.records;
+
+        } else {
+            property = await xata.db.TokenizedProperty.filter({
+                "project.id": projectId
+            }).select(["tokenAddress", "tokenPrice", "tokenTicker", "description", "location", "size", "photos", "project.assetType", {
+                "name": "<-AssetDocument.property",
+                "as": "documents",
+                "columns": ["fileType", "fileURI", "fileSize", "label"],
+            }]).getAll();
+        }
+
+        const transformedData = property.map((item: any) => ({
             id: item.id,
             description: item.description,
             location: item.location,
@@ -55,14 +70,14 @@ class ProjectService {
             tokenAddress: item.tokenAddress,
             tokenPrice: item.tokenPrice,
             tokenTicker: item.tokenTicker,
-            documents: item.documents.records.map(record => ({
+            documents: item.documents.records.map((record: any) => ({
                 id: record.id,
                 fileSize: record.fileSize,
                 fileType: record.fileType,
                 fileURI: record.fileURI,
                 label: record.label,
             })),
-            media: !item.photos ? [] : item.photos.map((photo) => ({
+            media: !item.photos ? [] : item.photos.map((photo: any) => ({
                 type: "image",
                 fileURI: photo,
             }))

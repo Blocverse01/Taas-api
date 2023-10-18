@@ -24,14 +24,15 @@ class ProjectController {
         }
     }
 
-    async getAllProjectAssets(req: Request<GetAllProjectAssetsSchemaType["params"]>, res: Response) {
+    async getAllProjectAssets(req: Request<GetAllProjectAssetsSchemaType['params'], {}, GetAllProjectAssetsSchemaType['body']>, res: Response) {
         try {
             const { projectId } = req.params;
+            const { paginate, number_of_records, page_number }: any = req.body;
             const authorizedUser: any = req.authorizedUser;
 
             if (!authorizedUser) throw new HttpException(UNAUTHORIZED, "Unauthorized");
 
-            const assets = await ProjectService.getProjectAssets(projectId, authorizedUser.id);
+            const assets = await ProjectService.getProjectAssets(projectId, authorizedUser.id, paginate!, number_of_records!, page_number!);
 
             return res.status(OK).json({ data: assets });
 
