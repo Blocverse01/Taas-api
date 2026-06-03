@@ -10,12 +10,8 @@ export const GetAllProjectAssetsSchema = Yup.object({
     params: Yup.object({
         projectId: Yup.string().trim().required(),
     }),
-    body: Yup.object({
-        paginate: Yup.boolean().required('Paginate is required').test(
-            'is-boolean',
-            "paginate must be a boolean value (true or false)",
-            (value) => typeof value !== 'boolean'
-        ),
+    query: Yup.object({
+        paginate: Yup.boolean().required('Paginate is required'),
         page_number: Yup.number().test('pageNumberRequired', 'Page Number is required when paginate is true.', function (value) {
             const page_number = this.resolve(Yup.ref('paginate'));
             if (page_number) {
